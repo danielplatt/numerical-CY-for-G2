@@ -3,6 +3,8 @@ from gph import ripser_parallel
 import time
 from itertools import combinations
 from tqdm import tqdm
+from gtda.plotting import plot_diagram
+from gtda.homology._utils import _postprocess_diagrams
 
 
 def load_as_np():
@@ -33,12 +35,16 @@ def main(data, thresh):
     start_time = time.time()
     dgm = ripser_parallel(data, thresh=thresh, maxdim=2, n_threads=-1)
 
+    dgm_gtda = _postprocess_diagrams([dgm["dgms"]], "ripser", (0, 1), np.inf, True)[0]
+    plot_diagram(dgm_gtda, homology_dimensions=(0, 1)).show()
+
     print(dgm)
     print(f'Threshold: {thresh}. Computation time: {time.time() - start_time}')
 
 
 if __name__ == '__main__':
     data = load_as_np()
+    thresh = 0.25 # 2*0.09505817482972509
     # explore_data(data)
-    main(data, 0.2)
+    main(data, thresh)
 
