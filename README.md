@@ -6,6 +6,8 @@ The resulting persistence diagram is saved as `vanilla_plot.png`:
 
 ![Persistence diagram for the cubic described above](/PH_from_distance_matrix/vanilla_plot.png)
 
-It has 4 H1-features, expected is 1.
-It has 0 H0-features, expected is 1, and it must have at least one.
+It has four H1-features, expected is one. 
+(There are four dots so close together that it looks like just two dots.
+But even two dots would be more than expected.)
+It has zero H0-features, expected is one, and it must have at least one.
 This suggests that the persistent homology computation is not done correctly.
