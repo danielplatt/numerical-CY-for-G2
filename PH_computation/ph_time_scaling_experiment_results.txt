@@ -1,4 +1,0 @@
-Threshold: 0.01. Computation time: 0.5244042873382568
-Threshold: 0.1. Computation time: 1.0210530757904053
-Threshold: 0.15. Computation time: 10.96689486503601
-Threshold: 0.2. Computation time: 33.508840799331665
