@@ -47,7 +47,7 @@ def ripser_run(data, thresh):
     ph = ripser(data, thresh=thresh, distance_matrix=True, maxdim=1)['dgms']
     ph_list = [homology.tolist() for homology in ph]
 
-    with open('ph_mini_example_diagram.txt', 'w') as f:
+    with open('ph_vanilla_cubic_diagram.txt', 'w') as f:
         json.dump(ph_list, f)
 
 
