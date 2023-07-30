@@ -1,14 +1,18 @@
+import json
 import numpy as np
 from gph import ripser_parallel
 import time
-from itertools import combinations
 from tqdm import tqdm
+import psutil
+
 from gtda.plotting import plot_diagram
 from gtda.homology._utils import _postprocess_diagrams
 
+from ripser import ripser
+
 
 def load_as_np():
-    file = open('vanilla_modified_distances.csv', 'rb')
+    file = open('vanilla_modified_distances-generic-deformation.csv', 'rb')
     data = np.loadtxt(file, delimiter=",", dtype=np.float64)
     print(data.shape, data.dtype)
     return data
@@ -32,20 +36,30 @@ def explore_data(data):
     print(f'Max distance to closest point: {np.max(closest_point_distances)}')
     print(f'Average distance between two points: {np.average(average_point_distances)}')
 
-def main(data, thresh):
-    start_time = time.time()
-    dgm = ripser_parallel(data, metric="precomputed", thresh=thresh, maxdim=2, n_threads=-1)
+def gph_run(data, thresh):
+    dgm = ripser_parallel(data, metric="precomputed", thresh=thresh, maxdim=2, n_threads=1)
 
     dgm_gtda = _postprocess_diagrams([dgm["dgms"]], "ripser", (0, 1), np.inf, True)[0]
     plot_diagram(dgm_gtda, homology_dimensions=(0, 1)).show()
 
-    np.set_printoptions(threshold=np.inf)
-    print(dgm)
-    print(f'Threshold: {thresh}. Computation time: {time.time() - start_time}')
+
+def ripser_run(data, thresh):
+    ph = ripser(data, thresh=thresh, distance_matrix=True, maxdim=1)['dgms']
+    ph_list = [homology.tolist() for homology in ph]
+
+    with open('ph_mini_example_diagram.txt', 'w') as f:
+        json.dump(ph_list, f)
 
 
 if __name__ == '__main__':
+    print(f'Memory usage in MB: {psutil.Process().memory_info().rss/1024 ** 2} (normally around 116.671875)')
+    start_time = time.time()
     data = load_as_np()
-    thresh = 3*0.1182402879390776
-    # explore_data(data)
-    main(data, thresh)
+    load_time = time.time() - start_time
+    print(f'Memory usage in MB: {psutil.Process().memory_info().rss / 1024 ** 2} (normally around 10207.140625 for float64)')
+    print(f'Load time: {load_time}')
+    thresh = 2*0.11757912072752902-0.0000000001
+    ripser_run(data, thresh)
+    print(f'Memory usage in MB: {psutil.Process().memory_info().rss / 1024 ** 2}')
+    print(f'Threshold: {thresh}. Computation time: {time.time() - start_time - load_time}')
+    print(f'Total time: {time.time() - start_time}')
