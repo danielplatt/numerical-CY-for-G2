@@ -28,7 +28,7 @@ k = n-d # dimension of variety
 @polyvar lambda[1:d] mu[1:d]; # lagrange multipliers
 
 # 2. Compute the bottlenecks
-println("2. Initialisation...")
+println("2. Compute the bottlenecks...")
 
 grad = differentiate(F, x)
 G = subs(F, x => y)
@@ -79,9 +79,9 @@ for s in IterTools.subsets(1:n, k)
     # Construct the PathTracker
     tracker = HomotopyContinuation.pathtracker(Ft; parameters=p[1:k], generic_parameters=p₀)
     for p1 in Iterators.product(map(j-> 1:length(indices), s)...)
-        counter += length(S_p₀)
+        global counter += length(S_p₀)
         for s1 in S_p₀
-            result = track(tracker, s1; target_parameters=map(j -> indices[p1[j]], 1:k))
+            global result = track(tracker, s1; target_parameters=map(j -> indices[p1[j]], 1:k))
             # check that the tracking was successfull
             if is_success(result) && is_real(result)
                 push!(samples, real(solution(result)))
