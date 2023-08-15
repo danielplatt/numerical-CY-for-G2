@@ -1,0 +1,9 @@
+DynamicPolynomials v0.3.21
+Eirene v1.3.6
+HomotopyContinuation v1.4.4
+IJulia v1.24.2
+IterTools v1.4.0
+JLD v0.13.3
+JLD2 v0.4.3
+Plots v1.0.14
+LinearAlgebra
