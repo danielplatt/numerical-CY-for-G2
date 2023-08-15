@@ -113,7 +113,7 @@ for l in 1:k-1
         # Construct the PathTracker
         tracker = HomotopyContinuation.pathtracker(system; parameters=[y; p[1:l]], generic_parameters=p₀)
         for p1 in Iterators.product(map(j-> 1:length(indices), s)...)
-            extra_counter += length(S_p₀)
+            global extra_counter += length(S_p₀)
             for s1 in S_p₀
                 result = track(tracker, s1; target_parameters=[randn(Float64, n); map(j -> indices[p1[j]], 1:l)])
                 # check that the tracking was successfull
