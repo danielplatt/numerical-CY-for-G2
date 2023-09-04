@@ -104,6 +104,8 @@ def find_medoids_cluster(points_real, omega_norm):
     plt.plot(k_values, scores)
     plt.show()
 
+    plt.savefig('output_images/medoids_scores.png')
+
     print('Cluster centers:')
     print(cluster_centers)
 
