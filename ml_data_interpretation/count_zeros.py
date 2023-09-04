@@ -86,18 +86,26 @@ def find_medoids_cluster(points_real, omega_norm):
     k_values = []
     scores = []
 
+    cluster_centers = None
+
     for k in range(10):
         if k == 0:
             continue
 
-        print()
+        print(f'Now clustering for k={k}')
         kmedoids = KMedoids(n_clusters=k, random_state=0, metric=fubini_study_distance).fit(small_points)
 
         k_values += [k]
         scores += [kmedoids.inertia_]
 
+        if k == 4:
+            cluster_centers = kmedoids.cluster_centers_
+
     plt.plot(k_values, scores)
     plt.show()
+
+    print('Cluster centers:')
+    print(cluster_centers)
 
 
 if __name__ == '__main__':
@@ -107,6 +115,6 @@ if __name__ == '__main__':
     #print(avg_nearest_distances)
     #print(np.average(avg_nearest_distances), np.std(avg_nearest_distances))
 
-    find_agglomerate_cluster(points_real, omega_norm)
+    #find_agglomerate_cluster(points_real, omega_norm)
 
-    #find_medoids_cluster(points_real, omega_norm)
+    find_medoids_cluster(points_real, omega_norm)
