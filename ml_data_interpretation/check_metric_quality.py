@@ -22,8 +22,8 @@ def get_approx_distances_to_near_singularity(points):
 def plot_distance_versus_loss(points, losses, N=100000):
     distances = get_approx_distances_to_near_singularity(points[:N])
     plt.scatter(distances, losses[:N], s=1, alpha=0.5)
-    plt.show()
     plt.savefig('output_images/distance_versus_loss.png')
+    plt.show()
 
 
 def plot_distance_to_sing_versus_neckness(points, metric, N=100000):
@@ -37,8 +37,8 @@ def plot_distance_to_sing_versus_neckness(points, metric, N=100000):
         smallest_evs += [eigenvalues[0]]
 
     plt.scatter(distances, biggest_evs[:N], s=1, alpha=0.5)
-    plt.show()
     plt.savefig('output_images/distance_versus_neckness.png')
+    plt.show()
 
 
 def main():
