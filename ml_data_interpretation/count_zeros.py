@@ -112,10 +112,4 @@ def find_medoids_cluster(points_real, omega_norm):
 if __name__ == '__main__':
     points_real, omega_norm = load_data()
 
-    #avg_nearest_distances = average_nearest_point(points_real, fubini_study_distance, 1000)
-    #print(avg_nearest_distances)
-    #print(np.average(avg_nearest_distances), np.std(avg_nearest_distances))
-
-    #find_agglomerate_cluster(points_real, omega_norm)
-
     find_medoids_cluster(points_real, omega_norm)
