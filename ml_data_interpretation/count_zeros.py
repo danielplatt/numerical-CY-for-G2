@@ -5,9 +5,11 @@ from sklearn.cluster import KMeans, AgglomerativeClustering
 from sklearn_extra.cluster import KMedoids
 
 
-def load_data():
-    points_real = np.load('data/One_form/points_real.npy')
-    omega_norm = np.load('data/One_form/norm_square.npy')
+def load_data(points_path='data/One_form/points_real.npy', omega_norm_path='data/One_form/norm_square.npy'):
+    points_real = np.load(points_path)
+    omega_norm = np.load(omega_norm_path)
+    print(f'{points_path} points_real.shape: {points_real.shape}')
+    print(f'{omega_norm_path} omega_norm.shape: {omega_norm.shape}')
     return points_real, omega_norm
 
 
@@ -51,17 +53,26 @@ def normalize_points_by_first_coordinate(points):
 
 
 def get_normalized_small_points(points_real, omega_norm):
-    small_points = []
-    small_norms = []
-    for point, norm in zip(points_real, omega_norm):
-        if norm <= 2.0e-7:
-            small_points += [point]
-            small_norms += [norm]
+    # get 1000 points with smallest norm
 
-    small_points = np.array(small_points)
-    small_points = normalize_points_by_first_coordinate(small_points)
+    indexes = sorted(range(len(omega_norm)), key=omega_norm.__getitem__)
+    omega_norm_sorted = np.array(list(map(omega_norm.__getitem__, indexes)))
+    points_real_sorted = np.array(list(map(points_real.__getitem__, indexes)))
 
-    return small_points, small_norms
+    return points_real_sorted[:600], omega_norm_sorted[:600]
+
+    # small_points = []
+    # small_norms = []
+    # omega_L1_norm = sum(omega_norm)/len(omega_norm)
+    # for point, norm in zip(points_real, omega_norm):
+    #     if norm <= 0.001*omega_L1_norm:
+    #         small_points += [point]
+    #         small_norms += [norm]
+    #
+    # small_points = np.array(small_points)
+    # small_points = normalize_points_by_first_coordinate(small_points)
+    #
+    # return small_points, small_norms
 
 
 def find_agglomerate_cluster(points_real, omega_norm):
@@ -82,6 +93,8 @@ def find_agglomerate_cluster(points_real, omega_norm):
 
 def find_medoids_cluster(points_real, omega_norm):
     small_points, _ = get_normalized_small_points(points_real, omega_norm)
+
+    print(f'small_points.shape: {small_points.shape}')
 
     k_values = []
     scores = []
@@ -105,11 +118,17 @@ def find_medoids_cluster(points_real, omega_norm):
     plt.savefig('output_images/medoids_scores.png')
     plt.show()
 
-    print('Cluster centers:')
+    print('k=4 Cluster centers:')
     print(cluster_centers)
 
 
 if __name__ == '__main__':
-    points_real, omega_norm = load_data()
-
-    find_medoids_cluster(points_real, omega_norm)
+    load_paths = [
+        ['data/One_form/points_real.npy', 'data/One_form/norm_square.npy'],
+        ['data/quintic2/one_form/points_real.npy', 'data/quintic2/one_form/norm_square.npy'],
+        ['data/cicy1/one_form/points_real.npy', 'data/cicy1/one_form/norm_square.npy'],
+        # ['data/cicy2/one_form/points_real.npy', 'data/cicy2/one_form/norm_square.npy'], # no small points here...
+    ]
+    for load_path_pair in load_paths:
+        points_real, omega_norm = load_data(points_path=load_path_pair[0], omega_norm_path=load_path_pair[1])
+        find_medoids_cluster(points_real, omega_norm)
